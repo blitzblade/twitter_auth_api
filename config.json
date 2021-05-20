@@ -4,6 +4,7 @@
       "consumer_secret": "cctz3NYNdQ5Zx5JluVqdToaRShdvvAKJjBlNGHm2mDnpvFroaJ",
       "access_token": "2219265433-EROlK9b75gfKLwTZNYWvAFkEl0DhJklPZfiK0n7",
       "access_secret": "j26MZfHHwqTrXn0DRPyDkU1PCavCnTJqswupc6j6jNAER"
-    }
+    },
+    "allowed": ["twiitter_gh", "1selfsolutions","clemsedem","SylvesterJeaunx"]
   }
   

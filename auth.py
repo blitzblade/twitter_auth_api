@@ -10,14 +10,14 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
+current_username = os.environ.get('CURRENT_USERNAME')
 def get_config(filename,username):
     j = json.load(open(filename))
     return j[username]
 
 @app.route('/')
 def home():
-    return 'Hello world'
+    return current_username
 
 @app.route('/api/auth_twitter', methods = ["POST"])
 @cross_origin()
@@ -29,6 +29,7 @@ def authorize_twitter():
     print("callback url: ",callback_url)
     print('CURRENT DIRECTORY: ', current_dir)
     config = get_config(f"{current_dir}/config.json",'kwesi_dadson')
+
     auth = tweepy.OAuthHandler(config["consumer_key"], config["consumer_secret"], callback_url)
 
     try:
@@ -63,11 +64,12 @@ def twitter_callback():
         user = api.me()
         print("API DETAILS: ", user)
         username = user.screen_name
+        user_id = user.id
         
-        return json.dumps({"message":"success", "access_token": auth.access_token, "access_token_secret": auth.access_token_secret})
+        return json.dumps({"message":"success", "user_id": user_id, "username": username, "access_token": auth.access_token, "access_token_secret": auth.access_token_secret})
     except Exception as ex:
         print(ex)
-        return json.dumps({"message":"Failed to get tokens"})
+        return json.dumps({"message":"Failed to get tokens"}), 404
 
 @app.route('/<name>')
 def hello_name(name):

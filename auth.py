@@ -17,7 +17,7 @@ def get_config(filename,username):
 
 @app.route('/')
 def home():
-    return current_username
+    return "API is LIVE!"
 
 @app.route('/api/auth_twitter', methods = ["POST"])
 @cross_origin()

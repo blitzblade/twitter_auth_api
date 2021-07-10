@@ -1,5 +1,8 @@
 name: Publish Docker
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
   build-auth-api:
     runs-on: ubuntu-latest

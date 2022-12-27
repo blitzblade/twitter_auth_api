@@ -37,10 +37,11 @@ def authorize_twitter():
     consumer_secret = body['consumer_secret'] if body.get(
         'consumer_secret') else config["consumer_secret"]
 
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret, callback_url)
+    auth = tweepy.OAuth1UserHandler(
+        consumer_key, consumer_secret, callback=callback_url)
 
     try:
-        redirect_url = auth.get_authorization_url()
+        redirect_url = auth.get_authorization_url(signin_with_twitter=True)
         print("REDIRECT: ", redirect_url)
         return json.dumps({"message": "success", "redirect_url": redirect_url})
         # return redirect(redirect_url)
@@ -71,13 +72,19 @@ def twitter_callback():
 
         auth.request_token = {"oauth_token": oauth_token,
                               "oauth_token_secret": oauth_verifier}
-        auth.get_access_token(oauth_verifier)
 
-        print("ACCESS TOKEN: ", auth.access_token)
-        print("ACCESS SECRET: ", auth.access_token_secret)
+        access_token, access_token_secret = auth.get_access_token(
+            oauth_verifier)
+
+        print("ACCESS TOKEN: ", access_token)
+        print("ACCESS SECRET: ", access_token_secret)
+
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(access_token, access_token_secret)
+
         api = tweepy.API(auth)
 
-        user = api.me()
+        user = api.verify_credentials()
         print("API DETAILS: ", user)
         username = user.screen_name
         user_id = user.id
